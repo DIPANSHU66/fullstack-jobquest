@@ -8,8 +8,11 @@ import {
   updateProfile,
 } from "../controller/user.controller.js";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
-router.route("/register").post(register);
+import { singleupload } from "../middlewares/multer.js";
+router.route("/register").post(singleupload, register);
 router.route("/login").post(login);
-router.route("/profile/update").post(isAuthenticated, updateProfile);
+router
+  .route("/profile/update")
+  .post(singleupload, isAuthenticated, updateProfile);
 router.route("/delete").delete(isAuthenticated, logout);
 export default router;

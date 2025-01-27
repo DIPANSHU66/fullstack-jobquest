@@ -2,8 +2,6 @@ import { user } from "../Models/User.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-
-
 export const register = async (req, res) => {
   try {
     const { fullname, email, phoneno, password, role } = req.body;
@@ -19,7 +17,6 @@ export const register = async (req, res) => {
         message: "User already exist    with this email",
         success: false,
       });
-
 
     const hashedPassword = await bcrypt.hash(password, 10);
     await user.create({
@@ -37,8 +34,6 @@ export const register = async (req, res) => {
     console.log(err);
   }
 };
-
-
 
 export const login = async (req, res) => {
   try {
@@ -73,7 +68,7 @@ export const login = async (req, res) => {
       email: founduser.email,
       phoneno: founduser.phoneno,
       role: founduser.role,
-      profie: founduser.profie,
+      profie: founduser.profile,
     };
 
     const tokendata = { userid: founduser.id };
@@ -98,7 +93,6 @@ export const login = async (req, res) => {
   }
 };
 
-
 export const logout = async (req, res) => {
   try {
     return res.status(200).cookie("token", null, { maxAge: 0 }).json({
@@ -110,53 +104,43 @@ export const logout = async (req, res) => {
   }
 };
 
-
-
-
-
 export const updateProfile = async (req, res) => {
   try {
     const { fullname, email, phoneno, bio, skills } = req.body;
-    // const file = req.file;
-
-    // Cloudinary ayega idr
+    const file = req.file;
+    const userid = req.id;
     let skillsArray;
     if (skills) {
       skillsArray = skills.split(",");
     }
-    
 
-    const userid = req.id; //middleware Authentication
     let userdata = await user.findById(userid);
     if (!userdata)
       return res
         .status(400)
-        .json({ message: "User not  found", Success: false });
+        .json({ message: "User not  found", success: false });
 
     if (fullname) userdata.fullname = fullname;
     if (email) userdata.email = email;
     if (phoneno) userdata.phoneno = phoneno;
     if (bio) userdata.profile.bio = bio;
     if (skills) userdata.profile.skills = skillsArray;
-    // resume comes later
+    if (file) userdata.profile.resume = file.path;
     await userdata.save();
 
-    const updateduser = {
-      _id: userdata.id,
-      fullname: userdata.fullname,
-      email: userdata.email,
-      phoneno: userdata.phoneno,
-      role: userdata.role,
-      profie: userdata.profie,
-    };
     return res.status(200).json({
-      message: "Profile Updated  Successfully",
+      message: "Profile Updated Successfully",
       success: true,
-      user: updateduser,
+      user: {
+        _id: userdata.id,
+        fullname: userdata.fullname,
+        email: userdata.email,
+        phoneno: userdata.phoneno,
+        role: userdata.role,
+        profile: userdata.profile,
+      },
     });
   } catch (err) {
     console.log(err);
   }
 };
-
-
