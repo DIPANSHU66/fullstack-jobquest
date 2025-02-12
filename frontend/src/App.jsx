@@ -6,7 +6,6 @@ import Home from "./components/Home";
 import Jobs from "./components/Jobs";
 import Browse from "./components/Browse";
 import Profile from "./components/Profile";
-import Logout from "./components/Logout";
 import Jobdescription from "./components/Jobdescription";
 const approuter = createBrowserRouter([
   {
@@ -33,10 +32,7 @@ const approuter = createBrowserRouter([
     path: "/Profile",
     element: <Profile></Profile>,
   },
-  {
-    path: "/Logout",
-    element: <Logout></Logout>,
-  },
+
   {
     path: "/jobs/description/:id",
     element: <Jobdescription></Jobdescription>,

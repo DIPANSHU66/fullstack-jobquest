@@ -38,13 +38,15 @@ const UpdateProfile = ({ open, setopen }) => {
 
   const filechangehandler = (e) => {
     const file = e.target.files?.[0];
-    setinput({ ...input, file });
+
+    setinput({ ...input, file: file || null });
   };
 
   const submithandler = async (e) => {
     e.preventDefault();
 
     setloading(true);
+
     const formData = new FormData();
     formData.append("fullname", input.fullname);
     formData.append("email", input.email);
@@ -56,12 +58,16 @@ const UpdateProfile = ({ open, setopen }) => {
     }
 
     try {
-      const res = await axios.post(`${USER_API_END_POINT}/profile/update`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-      });
+      const res = await axios.post(
+        `${USER_API_END_POINT}/profile/update`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+        }
+      );
       if (res.data.success) {
         console.log(res.data.user);
         dispatch(setuser(res.data.user));
@@ -123,7 +129,7 @@ const UpdateProfile = ({ open, setopen }) => {
                 onChange={changeEventHandler}
                 value={input.phoneno}
                 className="col-span-3 input"
-                type="text"
+                type="Number"
                 id="number"
                 name="phoneno"
               />

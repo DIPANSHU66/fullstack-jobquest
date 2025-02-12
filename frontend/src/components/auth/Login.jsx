@@ -18,7 +18,7 @@ const Login = () => {
     password: "",
     role: "student",
   });
-  const { loading, user } = useSelector((store) => store.auth);
+  const { loading } = useSelector((store) => store.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -39,6 +39,7 @@ const Login = () => {
       });
 
       if (res.data.success) {
+    
         dispatch(setuser(res.data.userdata));
         navigate("/");
         toast.success(res.data.message);

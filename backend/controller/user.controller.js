@@ -1,7 +1,8 @@
 import { user } from "../Models/User.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-
+import getdataUri from "../utils/datauri.js";
+import cloudinary from "../utils/cloudinary.js";
 export const register = async (req, res) => {
   try {
     const { fullname, email, phoneno, password, role } = req.body;
@@ -10,6 +11,9 @@ export const register = async (req, res) => {
         message: "Something is Missing",
         success: false,
       });
+    const file = req.file;
+    const fileUri = getdataUri(file);
+    const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
 
     const User = await user.findOne({ email });
     if (User)
@@ -25,6 +29,9 @@ export const register = async (req, res) => {
       phoneno,
       password: hashedPassword,
       role,
+      profile: {
+        profilephoto: cloudResponse.secure_url,
+      },
     });
     return res.status(200).json({
       message: "Account Created Successfully",
@@ -68,7 +75,7 @@ export const login = async (req, res) => {
       email: founduser.email,
       phoneno: founduser.phoneno,
       role: founduser.role,
-      profie: founduser.profile,
+      profile: founduser.profile,
     };
 
     const tokendata = { userid: founduser.id };
@@ -107,8 +114,18 @@ export const logout = async (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const { fullname, email, phoneno, bio, skills } = req.body;
+
     const file = req.file;
+
+    let fileUri, cloudResponse;
+    if (file) {
+      fileUri = getdataUri(file);
+      if (fileUri)
+        cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+    }
+
     const userid = req.id;
+
     let skillsArray;
     if (skills) {
       skillsArray = skills.split(",");
@@ -120,12 +137,20 @@ export const updateProfile = async (req, res) => {
         .status(400)
         .json({ message: "User not  found", success: false });
 
+    //  secure cloudinary url
+    if (!userdata.profile) userdata.profile = {};
     if (fullname) userdata.fullname = fullname;
     if (email) userdata.email = email;
     if (phoneno) userdata.phoneno = phoneno;
     if (bio) userdata.profile.bio = bio;
-    if (skills) userdata.profile.skills = skillsArray;
-    if (file) userdata.profile.resume = file.path;
+    if (skillsArray && skillsArray.length > 0)
+      userdata.profile.skills = skillsArray;
+
+    if (cloudResponse) {
+      userdata.profile.resume = cloudResponse.secure_url;
+      userdata.profile.resumeorignalname = file.originalname; ///save
+    }
+
     await userdata.save();
 
     return res.status(200).json({
@@ -140,7 +165,8 @@ export const updateProfile = async (req, res) => {
         profile: userdata.profile,
       },
     });
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error.message, success: false });
   }
 };

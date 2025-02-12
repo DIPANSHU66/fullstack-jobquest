@@ -14,6 +14,9 @@ const Profile = () => {
   const { user } = useSelector((store) => store.auth);
   const isresume = Boolean(user?.profile?.resume);
 
+  const resumeUrl = user?.profile?.resume;
+  const imageUrl = resumeUrl ? resumeUrl.replace(".pdf", ".jpg") : "#";
+
   return (
     <div className="overflow-x-auto scrollbar-hide ">
       <Navbar />
@@ -32,9 +35,11 @@ const Profile = () => {
 
           <div className="text-center md:text-left flex-1">
             <h1 className="font-medium text-xl md:text-2xl">
-              {user?.fullname}
+              {user?.fullname || "User Name"}
             </h1>
-            <p className="text-sm text-gray-500">{user?.profile?.bio}</p>
+            <p className="text-sm text-gray-500">
+              {user?.profile?.bio != "undefined" ? user?.profile?.bio : ""}
+            </p>
           </div>
 
           <div className="flex-shrink-0">
@@ -52,21 +57,21 @@ const Profile = () => {
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 my-4">
           <div className="flex items-center gap-2 text-gray-600">
             <Mail className="h-5 w-5" />
-            <span className="text-sm">{user?.email}</span>
+            <span className="text-sm">{user?.email || " "}</span>
           </div>
           <div className="flex items-center gap-2 text-gray-600">
             <Contact className="h-5 w-5" />
-            <span className="text-sm">{user?.phoneno}</span>
+            <span className="text-sm">{user?.phoneno || " "}</span>
           </div>
         </div>
 
         <div className="mt-4">
           <h1 className="font-semibold text-lg mb-2">Skills</h1>
           <div className=" sm:w-[100vh]  grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {user?.profile?.skills?.length > 0 ? (
+            {user?.profile?.skills?.length ? (
               user?.profile?.skills?.map((skill, index) => (
                 <Badge key={index} className="px-3 py-1 text-sm text-center">
-                  {skill}
+                  {skill != "undefined" ? skill : "No Skills Yet"}
                 </Badge>
               ))
             ) : (
@@ -77,12 +82,8 @@ const Profile = () => {
         <div className="  grid w-full max-w-sm items-center gap-1.5 mt-4  ">
           <Label className="text-md font-bold">Resume</Label>
           {isresume ? (
-            <a
-              className="text-blue-500"
-              target="blank"
-              href={user?.profile?.resume || "#"}
-            >
-              📂 Open Resume
+            <a className="text-blue-500" target="blank" href={imageUrl || "#"}>
+              📂 {user?.profile?.resumeorignalname}
             </a>
           ) : (
             <span>Not Found</span>

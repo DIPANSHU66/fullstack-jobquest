@@ -22,10 +22,14 @@ const corsoptions = {
 app.use(cors(corsoptions));
 
 const PORT = process.env.PORT || 3000;
+
 app.use("/api/v1/user", userroute);
+
 app.use("/api/v1/company", companyroute);
+
 app.use("/api/v1/jobs", jobroute);
 app.use("/api/v1/application", applicantroute);
+
 app.listen(PORT, () => {
   connectdb();
   console.log(`Server Running at  port    ${PORT}`);
