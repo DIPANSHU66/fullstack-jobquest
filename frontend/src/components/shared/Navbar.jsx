@@ -14,8 +14,9 @@ const Navbar = () => {
   const { user } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const profilephoto = user?.profile?.profilephoto??  "https://github.com/shadcn.png";
-  console.log(profilephoto);
+  const profilephoto =
+    user?.profile?.profilephoto ?? "https://github.com/shadcn.png";
+
   const logouthandler = async () => {
     try {
       const res = await axios.delete(`${USER_API_END_POINT}/logout`, {
@@ -23,7 +24,6 @@ const Navbar = () => {
       });
 
       if (res.data?.Success) {
-        console.log(res.data);
         dispatch(setuser(null));
         navigate("/");
         toast.success(res.data.message);
@@ -81,9 +81,9 @@ const Navbar = () => {
                     <AvatarImage src={profilephoto} />
                   </Avatar>
                   <div>
-                    <h4 className="font-medium">Patel Marnstack</h4>
+                    <h4 className="font-medium">{user?.fullname}</h4>
                     <p className="text-sm text-muted-foreground">
-                      lorem ipsum{" "}
+                      {user?.profile?.bio}
                     </p>
                   </div>
                 </div>

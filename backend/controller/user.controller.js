@@ -11,7 +11,13 @@ export const register = async (req, res) => {
         message: "Something is Missing",
         success: false,
       });
+
     const file = req.file;
+    if (!file) {
+      return res
+        .status(401)
+        .json({ message: "ADD Profile image ALSO", success: false });
+    }
     const fileUri = getdataUri(file);
     const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
 

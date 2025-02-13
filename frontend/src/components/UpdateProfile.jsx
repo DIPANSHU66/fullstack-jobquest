@@ -69,7 +69,6 @@ const UpdateProfile = ({ open, setopen }) => {
         }
       );
       if (res.data.success) {
-        console.log(res.data.user);
         dispatch(setuser(res.data.user));
         toast.success(res.data.message);
       }

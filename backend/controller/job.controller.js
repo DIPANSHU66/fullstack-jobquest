@@ -15,6 +15,7 @@ export const postjob = async (req, res) => {
     } = req.body;
 
     const userid = req.id;
+    
     if (
       !title ||
       !description ||
@@ -54,8 +55,6 @@ export const postjob = async (req, res) => {
   }
 };
 
-
-
 export const getalljobs = async (req, res) => {
   try {
     const keyword = req.query.keyword || "";
@@ -78,6 +77,7 @@ export const getalljobs = async (req, res) => {
       });
 
     return res.status(200).json({
+      message: "New job created successfully.",
       jobs,
       success: true,
     });
@@ -88,11 +88,10 @@ export const getalljobs = async (req, res) => {
 
 //students
 
-
 export const getjobbyid = async (req, res) => {
   try {
     const jobid = req.params.id;
-    const newjob =  await Job.findById(jobid);
+    const newjob = await Job.findById(jobid);
     if (!newjob)
       return res.status(404).json({
         message: "Job not found",
@@ -107,10 +106,6 @@ export const getjobbyid = async (req, res) => {
     console.log(e);
   }
 };
-
-
-
-
 
 export const getadminjob = async (req, res) => {
   try {
@@ -131,4 +126,3 @@ export const getadminjob = async (req, res) => {
     console.log(e);
   }
 };
-

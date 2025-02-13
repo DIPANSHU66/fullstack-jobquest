@@ -8,7 +8,7 @@ const isAuthenticated = async (req, res, next) => {
         success: false,
       });
     }
-    const decoded = await jwt.verify(token, process.env.SECERT_KEY);
+    const decoded = jwt.verify(token, process.env.SECERT_KEY);
     if (!decoded) {
       return res.status(401).json({
         message: "Invalid Token",
@@ -19,6 +19,10 @@ const isAuthenticated = async (req, res, next) => {
     next();
   } catch (e) {
     console.log(e);
+    return res.status(401).json({
+      message: "Invalid or expired token",
+      success: false,
+    });
   }
 };
 export default isAuthenticated;
