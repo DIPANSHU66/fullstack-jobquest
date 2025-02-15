@@ -44,15 +44,28 @@ const Navbar = () => {
         </div>
         <div className="flex items-center gap-5 sm:gap-12 w-full sm:w-auto justify-between">
           <ul className="flex font-medium items-center gap-5">
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/Jobs">Jobs</Link>
-            </li>
-            <li>
-              <Link to="/Browse">Browse</Link>
-            </li>
+            {user && user.role == "recruiter" ? (
+              <>
+                <li>
+                  <Link to="/admin/companies">Companies</Link>
+                </li>
+                <li>
+                  <Link to="/admin/Jobs">Jobs</Link>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link to="/">Home</Link>
+                </li>
+                <li>
+                  <Link to="/Jobs">Jobs</Link>
+                </li>
+                <li>
+                  <Link to="/Browse">Browse</Link>
+                </li>
+              </>
+            )}
           </ul>
 
           {!user ? (
@@ -89,12 +102,15 @@ const Navbar = () => {
                 </div>
 
                 <div className="flex flex-col my-2 gap-3 text-gray-600">
-                  <div className="flex w-fit items-center gap-2 cursor-pointer">
-                    <User2 />
-                    <Link to="/Profile">
-                      <Button variant="link">View Profile</Button>
-                    </Link>
-                  </div>
+                  {user && user.role === "student" && (
+                    <div className="flex w-fit items-center gap-2 cursor-pointer">
+                      <User2 />
+                      <Link to="/Profile">
+                        <Button variant="link">View Profile</Button>
+                      </Link>
+                    </div>
+                  )}
+
                   <div className="flex w-fit items-center gap-2 cursor-pointer">
                     <LogOut />
 

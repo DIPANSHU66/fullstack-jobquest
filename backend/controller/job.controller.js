@@ -15,7 +15,7 @@ export const postjob = async (req, res) => {
     } = req.body;
 
     const userid = req.id;
-    
+
     if (
       !title ||
       !description ||
@@ -91,7 +91,9 @@ export const getalljobs = async (req, res) => {
 export const getjobbyid = async (req, res) => {
   try {
     const jobid = req.params.id;
-    const newjob = await Job.findById(jobid);
+    const newjob = await Job.findById(jobid).populate({
+      path: "applications",
+    });
     if (!newjob)
       return res.status(404).json({
         message: "Job not found",
