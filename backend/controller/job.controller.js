@@ -24,14 +24,18 @@ export const postjob = async (req, res) => {
       !location ||
       !jobType ||
       !experience ||
-      !position ||
-      !companyid
+      !position
     ) {
       return res.status(400).json({
         message: "something  is Missing",
         success: false,
       });
     }
+    if (!companyid)
+      return res
+        .status(400)
+        .json({ message: "Company is Missing", success: false });
+
     const newjob = await Job.create({
       title,
       description,
@@ -112,7 +116,10 @@ export const getjobbyid = async (req, res) => {
 export const getadminjob = async (req, res) => {
   try {
     const adminid = req.id;
-    const newjobs = await Job.find({ created_by: adminid });
+    const newjobs = await Job.find({ created_by: adminid }).populate({
+      path: "company",
+      createdAt: -1,
+    });
 
     if (!newjobs)
       return res.status(404).json({

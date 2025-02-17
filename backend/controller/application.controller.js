@@ -59,8 +59,11 @@ export const getappliedjobs = async (req, res) => {
       .populate({
         path: "job",
         options: { sort: { createdAt: -1 } },
-      })
-      .populate({ path: "job.company", options: { sort: { createdAt: -1 } } });
+        populate: {
+          path: "company",
+          options: { sort: { createdAt: -1 } },
+        },
+      });
 
     if (!newapplication)
       return res.status(404).json({
@@ -100,7 +103,6 @@ export const getapplicants = async (req, res) => {
   });
 };
 
-
 export const updatestatus = async (req, res) => {
   try {
     const status = req.body.status;
@@ -113,7 +115,7 @@ export const updatestatus = async (req, res) => {
     }
     //  find the    application by  applicant   id
 
-    const newappliaction = await application.findById(applicationid)
+    const newappliaction = await application.findById(applicationid);
     if (!newappliaction)
       return res.status(400).json({
         message: "Appliaction   not found",
