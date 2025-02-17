@@ -6,7 +6,10 @@ import { setsearchedQuery } from "@/redux/jobSlice";
 import { useEffect } from "react";
 import useGetAlljobs from "@/hooks/useGetAlljobs";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 const Browse = () => {
+  const { user } = useSelector((store) => store.auth);
+  const navigate = useNavigate();
   useGetAlljobs();
   const { alljobs } = useSelector((store) => store.job);
   const dispatch = useDispatch();
@@ -14,6 +17,12 @@ const Browse = () => {
     return () => {
       dispatch(setsearchedQuery(""));
     };
+  }, []);
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/");
+    }
   }, []);
 
   return (

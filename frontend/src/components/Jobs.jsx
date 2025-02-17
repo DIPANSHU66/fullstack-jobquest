@@ -6,7 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 import useGetAllAdminjobs from "@/hooks/useGetAllAdminjobs";
 import { setserachedfilter } from "@/redux/jobSlice";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 const Jobs = () => {
+  const navigate = useNavigate();
+  const { user } = useSelector((store) => store.auth);
   useGetAllAdminjobs();
 
   const { alljobs, serachedfilter } = useSelector((store) => store.job);
@@ -42,6 +45,11 @@ const Jobs = () => {
     return () => {
       dispatch(setserachedfilter(""));
     };
+  }, []);
+  useEffect(() => {
+    if (!user) {
+      navigate("/");
+    }
   }, []);
 
   return (

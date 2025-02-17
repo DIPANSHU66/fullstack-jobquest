@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setSinglejob } from "@/redux/jobSlice";
@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 
 const Jobdescription = () => {
+  const navigate = useNavigate();
   const { user } = useSelector((store) => store.auth);
   const { singlejob } = useSelector((store) => store.job);
 
@@ -66,6 +67,12 @@ const Jobdescription = () => {
       ) || false;
     setIsAplied(isintialstate);
   }, [singlejob, user]);
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div className="max-w-3xl mx-auto my-10 px-4">
