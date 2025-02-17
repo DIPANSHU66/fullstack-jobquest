@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const corsoptions = {
-  origin: "http://localhost:5173",
+  origin: process.env.URL,
   credentials: true,
 };
 app.use(cors(corsoptions));
