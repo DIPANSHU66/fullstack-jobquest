@@ -8,33 +8,45 @@ import {
   TableBody,
   TableCell,
 } from "./ui/table";
+import { useSelector } from "react-redux";
 import { Badge } from "./ui/badge";
-import clsx from "clsx";
 
 const AppliedJobTable = () => {
-  const jobs = [
-    {
-      date: "Jan 25, 2025",
-      role: "Software Engineer",
-      company: "Google",
-      status: "Pending",
-    },
-    {
-      date: "Jan 20, 2025",
-      role: "Frontend Developer",
-      company: "Amazon",
-      status: "Accepted",
-    },
-    {
-      date: "Jan 18, 2025",
-      role: "Backend Developer",
-      company: "Microsoft",
-      status: "Rejected",
-    },
-  ];
+  const { allappliedjobs } = useSelector((store) => store.job);
+
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case "pending":
+        return (
+          <Badge className="bg-yellow-300 text-white py-1  px-2 text-sm  ">
+            {" "}
+            Pending
+          </Badge>
+        );
+      case "accepted":
+        return (
+          <Badge className="bg-green-500 text-white  py-1  px-2 text-sm">
+            Accepted
+          </Badge>
+        );
+      case "rejected":
+        return (
+          <Badge className="bg-red-400 text-white  py-1  px-2 text-sm">
+            {" "}
+            Rejected
+          </Badge>
+        );
+      default:
+        return (
+          <Badge className="bg-gray-500 text-white py-1  px-2 text-sm">
+            ⏳ Unknown
+          </Badge>
+        );
+    }
+  };
 
   return (
-    <div className=" w-full   overflow-x-auto ">
+    <div className="w-full overflow-x-auto">
       <Table className="w-full min-w-[500px] border border-gray-200 shadow-md rounded-lg">
         <TableCaption className="text-lg font-semibold text-gray-700">
           A List of Your Applied Jobs
@@ -50,33 +62,22 @@ const AppliedJobTable = () => {
         </TableHeader>
 
         <TableBody>
-          {jobs.map((job, index) => (
-            <TableRow
-              key={index}
-              className={clsx(
-                "border-b hover:bg-gray-50",
-                index % 2 && "bg-gray-50"
-              )}
-            >
-              <TableCell className="px-4 py-2">{job.date}</TableCell>
-              <TableCell className="px-4 py-2 font-medium">
-                {job.role}
-              </TableCell>
-              <TableCell className="px-4 py-2">{job.company}</TableCell>
-              <TableCell className="px-4 py-2">
-                <Badge
-                  className={clsx(
-                    "px-3 py-1 text-sm rounded-md",
-                    job.status === "Accepted" && "bg-green-200 text-green-700",
-                    job.status === "Rejected" && "bg-red-200 text-red-700",
-                    job.status === "Pending" && "bg-yellow-200 text-yellow-700"
-                  )}
-                >
-                  {job.status}
-                </Badge>
+          {allappliedjobs?.length > 0 ? (
+            allappliedjobs.map((item, index) => (
+              <TableRow key={index}>
+                <TableCell>{item?.createdAt?.split("T")[0]}</TableCell>
+                <TableCell>{item?.job?.title || "N/A"}</TableCell>
+                <TableCell>{item?.job?.company?.name || "N/A"}</TableCell>
+                <TableCell>{getStatusBadge(item?.status)}</TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan="4" className="text-center py-4 text-gray-500">
+                ❌ You haven't applied to any jobs yet.
               </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
     </div>

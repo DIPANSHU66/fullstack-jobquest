@@ -1,10 +1,20 @@
 import React from "react";
 import Navbar from "./shared/Navbar";
 import Job from "./Job";
-import { useSelector } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
+import { setsearchedQuery } from "@/redux/jobSlice";
+import { useEffect } from "react";
+import useGetAlljobs from "@/hooks/useGetAlljobs";
+import { motion } from "framer-motion";
 const Browse = () => {
+  useGetAlljobs();
   const { alljobs } = useSelector((store) => store.job);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    return () => {
+      dispatch(setsearchedQuery(""));
+    };
+  }, []);
 
   return (
     <div>
@@ -16,9 +26,15 @@ const Browse = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4  mt-5">
           {alljobs.map((job, index) => {
             return (
-              <div key={index}>
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: 100 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -100 }}
+                transition={{ duration: 0.3 }}
+              >
                 <Job job={job} />
-              </div>
+              </motion.div>
             );
           })}
         </div>

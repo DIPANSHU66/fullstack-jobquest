@@ -2,6 +2,7 @@ import React from "react";
 import LatestjobsCards from "./LatestjobsCards";
 import { useSelector } from "react-redux";
 
+
 const Latestjobs = () => {
   const { alljobs } = useSelector((store) => store.job);
 
@@ -12,7 +13,7 @@ const Latestjobs = () => {
       </h1>
       <div className="grid  grid-cols-1 sm:grid-cols-3 gap-4 my-5 ">
         {alljobs?.slice(0, 6).map((item, index) => (
-          <LatestjobsCards key={index}job={item}  ></LatestjobsCards>
+          <LatestjobsCards key={index} job={item} />
         ))}
       </div>
     </div>

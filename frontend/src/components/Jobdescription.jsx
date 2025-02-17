@@ -10,15 +10,38 @@ import { toast } from "sonner";
 import { useState } from "react";
 
 const Jobdescription = () => {
+  const { user } = useSelector((store) => store.auth);
+  const { singlejob } = useSelector((store) => store.job);
+
+  const [isAplied, setIsAplied] = useState(false);
+
   const params = useParams();
-
   const jobid = params.id;
-
   const dispatch = useDispatch();
 
-  const { user } = useSelector((store) => store.auth);
+  const applyjobhandler = async () => {
+    try {
+      const res = await axios.get(
+        `${APPLYCATION_API_END_POINT}/apply/${jobid}`,
+        {
+          withCredentials: true,
+        }
+      );
+      if (res.data.success) {
+        setIsAplied(true);
+        const updatesinglejob = {
+          ...singlejob,
+          applications: [...singlejob.applications, { applicant: user?._id }],
+        };
 
-  const { singlejob } = useSelector((store) => store.job);
+        dispatch(setSinglejob(updatesinglejob));
+
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.log(error.response.data.message);
+    }
+  };
 
   useEffect(() => {
     const fetchsinglejob = async () => {
@@ -35,38 +58,14 @@ const Jobdescription = () => {
     };
     fetchsinglejob();
   }, [jobid, dispatch]);
-  
-  const isintialstate =
-    singlejob?.applications?.some(
-      (application) => application.applicant == user?._id
-    ) || false;
 
-  const [isAplied, setIsAplied] = useState(isintialstate);
-
-  const applyjobhandler = async () => {
-    try {
-      const res = await axios.get(
-        `${APPLYCATION_API_END_POINT}/apply/${jobid}`,
-        {
-          withCredentials: true,
-        }
-      );
-      if (res.data.success) {
-        const updatesinglejob = {
-          ...singlejob,
-          applications: [
-            ...(singlejob.applications || []),
-            { applicant: user?._id },
-          ],
-        };
-        dispatch(setSinglejob(updatesinglejob));
-        setIsAplied(true);
-        toast.success(res.data.message);
-      }
-    } catch (error) {
-      console.log(error.response.data.message);
-    }
-  };
+  useEffect(() => {
+    const isintialstate =
+      singlejob?.applications?.some(
+        (application) => application.applicant === user?._id
+      ) || false;
+    setIsAplied(isintialstate);
+  }, [singlejob, user]);
 
   return (
     <div className="max-w-3xl mx-auto my-10 px-4">

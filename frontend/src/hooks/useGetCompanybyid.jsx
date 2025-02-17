@@ -3,12 +3,12 @@ import { COMPANY_API_END_POINT } from "@/utils/Constant";
 import axios from "axios";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-const useGetCompanybyid = () => {
+const useGetCompanybyid = (companyid) => {
   const dispatch = useDispatch();
   useEffect(() => {
-    const fetchsinglecompany = async (companyid) => {
+    const fetchsinglecompany = async () => {
       try {
-        const res = await axios.get(`${COMPANY_API_END_POINT}/get/companyid`, {
+        const res = await axios.get(`${COMPANY_API_END_POINT}/get/${companyid}`, {
           withCredentials: true,
         });
         if (res.data.success) {
