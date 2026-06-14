@@ -19,22 +19,23 @@ import { useNavigate } from "react-router-dom";
 
 const AdminjobsTable = () => {
   const { alladminjobs, searchjobbytext } = useSelector((store) => store.job);
-  const [filterjobs, setfilterjobs] = useState(alladminjobs);
+  const [filterjobs, setfilterjobs] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
     const filteredjob =
-      alladminjobs?.length >= 0 &&
-      alladminjobs.filter((job) => {
-        if (!searchjobbytext) {
-          return true;
-        }
-        return (
-          job?.title?.toLowerCase().includes(searchjobbytext.toLowerCase()) ||
-          job?.company?.name
-            .toLowerCase()
-            .includes(searchjobbytext.toLowerCase())
-        );
-      });
+      alladminjobs?.length > 0
+        ? alladminjobs.filter((job) => {
+            if (!searchjobbytext) {
+              return true;
+            }
+            return (
+              job?.title?.toLowerCase().includes(searchjobbytext.toLowerCase()) ||
+              job?.company?.name
+                ?.toLowerCase()
+                .includes(searchjobbytext.toLowerCase())
+            );
+          })
+        : [];
     setfilterjobs(filteredjob);
   }, [alladminjobs, searchjobbytext]);
 

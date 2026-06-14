@@ -11,7 +11,7 @@ import { Label } from "./ui/label";
 import { Button } from "./ui/button";
 import { Loader2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { USER_API_END_POINT } from "@/utils/Constant";
+
 import { setuser } from "@/redux/authSlice";
 import { toast } from "sonner";
 import axios from "axios";
@@ -59,14 +59,14 @@ const UpdateProfile = ({ open, setopen }) => {
 
     try {
       const res = await axios.post(
-        `${USER_API_END_POINT}/profile/update`,
+        `${import.meta.env.VITE_API_URL}/user/profile/update`,
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
           },
           withCredentials: true,
-        }
+        },
       );
       if (res.data.success) {
         dispatch(setuser(res.data.user));

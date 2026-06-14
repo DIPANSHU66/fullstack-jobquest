@@ -22,18 +22,19 @@ const CompaniesTable = () => {
     (store) => store.company
   );
   const navigate = useNavigate();
-  const [filtercompany, setfiltercompany] = useState(allcompanies);
+  const [filtercompany, setfiltercompany] = useState([]);
   useEffect(() => {
     const filteredcompany =
-      allcompanies?.length > 0 &&
-      allcompanies.filter((company) => {
-        if (!searchcompanybytext) {
-          return true;
-        }
-        return company?.name
-          ?.toLowerCase()
-          .includes(searchcompanybytext.toLowerCase());
-      });
+      allcompanies?.length > 0
+        ? allcompanies.filter((company) => {
+            if (!searchcompanybytext) {
+              return true;
+            }
+            return company?.name
+              ?.toLowerCase()
+              .includes(searchcompanybytext.toLowerCase());
+          })
+        : [];
     setfiltercompany(filteredcompany);
   }, [searchcompanybytext, allcompanies]);
   return (

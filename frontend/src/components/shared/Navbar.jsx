@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import axios from "axios";
-import { USER_API_END_POINT } from "@/utils/Constant";
+
 import { setuser } from "@/redux/authSlice";
 
 const Navbar = () => {
@@ -19,11 +19,11 @@ const Navbar = () => {
 
   const logouthandler = async () => {
     try {
-      const res = await axios.delete(`${USER_API_END_POINT}/logout`, {
+      const res = await axios.delete(`${import.meta.env.VITE_API_URL}/user/logout`, {
         withCredentials: true,
       });
 
-      if (res.data?.Success) {
+      if (res.data?.success) {
         dispatch(setuser(null));
         navigate("/");
         toast.success(res.data.message);
@@ -52,6 +52,14 @@ const Navbar = () => {
                 <li>
                   <Link to="/admin/Jobs">Jobs</Link>
                 </li>
+                <li>
+                  <button
+                    onClick={logouthandler}
+                    className="hover:text-[#f83002] transition-colors cursor-pointer bg-transparent border-none p-0 font-medium text-gray-700"
+                  >
+                    Logout
+                  </button>
+                </li>
               </>
             ) : (
               <>
@@ -64,6 +72,38 @@ const Navbar = () => {
                 <li>
                   <Link to="/Browse">Browse</Link>
                 </li>
+                {user && (
+                  <>
+                    <li>
+                      <Link to="/ai-matching" className="text-purple-600 font-semibold hover:text-purple-700">
+                        AI Match ✨
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/resume-review" className="hover:text-purple-600 transition-colors">
+                        Resume Review 📂
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/interview-prep" className="hover:text-purple-600 transition-colors">
+                        Mock Interview 💬
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/Profile" className="hover:text-purple-600 transition-colors font-medium">
+                        Profile 👤
+                      </Link>
+                    </li>
+                    <li>
+                      <button
+                        onClick={logouthandler}
+                        className="hover:text-[#f83002] transition-colors cursor-pointer bg-transparent border-none p-0 font-medium text-gray-700"
+                      >
+                        Logout
+                      </button>
+                    </li>
+                  </>
+                )}
               </>
             )}
           </ul>

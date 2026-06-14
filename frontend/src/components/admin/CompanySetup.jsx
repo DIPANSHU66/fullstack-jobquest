@@ -5,7 +5,7 @@ import { ArrowLeft, Loader2 } from "lucide-react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import axios from "axios";
-import { COMPANY_API_END_POINT } from "@/utils/Constant";
+
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
@@ -38,11 +38,26 @@ const CompanySetup = () => {
   };
   const submithandler = async (e) => {
     e.preventDefault();
+
+    if (!input.name?.trim()) {
+      toast.error("Company name is required");
+      return;
+    }
+
+    if (input.website && input.website.trim()) {
+      const websiteRegex =
+        /^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{2,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/;
+      if (!websiteRegex.test(input.website.trim())) {
+        toast.error("Please enter a valid website URL");
+        return;
+      }
+    }
+
     const formData = new FormData();
-    formData.append("name", input.name);
-    formData.append("description", input.description);
-    formData.append("website", input.website);
-    formData.append("location", input.location);
+    formData.append("name", input.name.trim());
+    formData.append("description", input.description.trim());
+    formData.append("website", input.website.trim());
+    formData.append("location", input.location.trim());
 
     if (input.file) {
       formData.append("file", input.file);
@@ -50,21 +65,21 @@ const CompanySetup = () => {
     try {
       setloading(true);
       const res = await axios.put(
-        `${COMPANY_API_END_POINT}/update/${params.id}`,
+        `${import.meta.env.VITE_API_URL}/company/update/${params.id}`,
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
           },
           withCredentials: true,
-        }
+        },
       );
       if (res.data.success) {
         toast.success(res?.data?.message);
         Naviagte("/admin/companies");
       }
     } catch (error) {
-      toast.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || "Failed to update company details");
     } finally {
       setloading(false);
     }

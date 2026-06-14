@@ -50,6 +50,15 @@ const jobSchema = new mongoose.Schema(
         ref: "application",
       },
     ],
+    status: {
+      type: String,
+      enum: ["Active", "Inactive"],
+      default: "Active",
+    },
+    embedding: {
+      type: [Number],
+      default: [],
+    },
   },
   {
     timestamps: true,

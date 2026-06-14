@@ -1,104 +1,148 @@
 import "./App.css";
+
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 import Login from "./components/auth/Login";
 import Signup from "./components/auth/Signup";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 import Home from "./components/Home";
 import Jobs from "./components/Jobs";
 import Browse from "./components/Browse";
 import Profile from "./components/Profile";
 import Jobdescription from "./components/Jobdescription";
+
 import Companies from "./components/admin/Companies";
 import CompanyCreate from "./components/admin/CompanyCreate";
 import CompanySetup from "./components/admin/CompanySetup";
 import Adminjobs from "./components/admin/Adminjobs";
 import PostJob from "./components/admin/PostJob";
 import Apllicants from "./components/admin/Apllicants";
+
 import ProtectedRoute from "./components/admin/ProtectedRoute";
+
+import AIChatbot from "./components/AIChatbot";
+import AIMatching from "./components/AIMatching";
+import ResumeReview from "./components/ResumeReview";
+import InterviewPrep from "./components/InterviewPrep";
+
 const approuter = createBrowserRouter([
   {
     path: "/",
-    element: <Home></Home>,
+    element: <Home />,
   },
+
   {
     path: "/login",
-    element: <Login></Login>,
+    element: <Login />,
   },
+
   {
     path: "/signup",
-    element: <Signup></Signup>,
+    element: <Signup />,
   },
+
   {
     path: "/jobs",
-    element: <Jobs></Jobs>,
+    element: <Jobs />,
   },
+
   {
-    path: "/Browse",
-    element: <Browse></Browse>,
+    path: "/browse",
+    element: <Browse />,
   },
+
   {
-    path: "/Profile",
-    element: <Profile></Profile>,
+    path: "/profile",
+    element: <Profile />,
+  },
+
+  {
+    path: "/ai-matching",
+    element: <AIMatching />,
+  },
+
+  {
+    path: "/resume-review",
+    element: <ResumeReview />,
+  },
+
+  {
+    path: "/interview-prep",
+    element: <InterviewPrep />,
   },
 
   {
     path: "/jobs/description/:id",
-    element: <Jobdescription></Jobdescription>,
+    element: <Jobdescription />,
   },
 
-  //admin ke  liye
   {
     path: "/admin/companies",
+
     element: (
       <ProtectedRoute>
-        <Companies></Companies>,
+        <Companies />
       </ProtectedRoute>
     ),
   },
+
   {
-    path: "admin/companies/create",
+    path: "/admin/companies/create",
+
     element: (
       <ProtectedRoute>
-        <CompanyCreate></CompanyCreate>,
+        <CompanyCreate />
       </ProtectedRoute>
     ),
   },
+
   {
     path: "/admin/companies/:id",
+
     element: (
       <ProtectedRoute>
-        <CompanySetup></CompanySetup>,
+        <CompanySetup />
       </ProtectedRoute>
     ),
   },
+
   {
     path: "/admin/jobs",
+
     element: (
       <ProtectedRoute>
-        <Adminjobs></Adminjobs>,
+        <Adminjobs />
       </ProtectedRoute>
     ),
   },
+
   {
     path: "/admin/jobs/create",
+
     element: (
       <ProtectedRoute>
-        <PostJob></PostJob>,
+        <PostJob />
       </ProtectedRoute>
     ),
   },
+
   {
     path: "/admin/jobs/:id/applicants",
+
     element: (
       <ProtectedRoute>
-        <Apllicants></Apllicants>,
+        <Apllicants />
       </ProtectedRoute>
     ),
   },
 ]);
+
 function App() {
   return (
     <>
-      <RouterProvider router={approuter}></RouterProvider>
+      <RouterProvider router={approuter} />
+
+      <AIChatbot />
     </>
   );
 }

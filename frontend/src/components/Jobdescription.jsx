@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setSinglejob } from "@/redux/jobSlice";
-import { APPLYCATION_API_END_POINT, Job_API_END_POINT } from "@/utils/Constant";
+
 import { toast } from "sonner";
 import { useState } from "react";
 
@@ -22,17 +22,18 @@ const Jobdescription = () => {
 
   const applyjobhandler = async () => {
     try {
-      const res = await axios.get(
-        `${APPLYCATION_API_END_POINT}/apply/${jobid}`,
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/application/apply/${jobid}`,
+        {},
         {
           withCredentials: true,
-        }
+        },
       );
       if (res.data.success) {
         setIsAplied(true);
         const updatesinglejob = {
           ...singlejob,
-          applications: [...singlejob.applications, { applicant: user?._id }],
+          applications: [...(singlejob?.applications || []), { applicant: user?._id }],
         };
 
         dispatch(setSinglejob(updatesinglejob));
@@ -40,18 +41,22 @@ const Jobdescription = () => {
         toast.success(res.data.message);
       }
     } catch (error) {
-      console.log(error.response.data.message);
+      console.log(error);
+      toast.error(error.response?.data?.message || "Failed to apply for job");
     }
   };
 
   useEffect(() => {
     const fetchsinglejob = async () => {
       try {
-        const res = await axios.get(`${Job_API_END_POINT}/get/${jobid}`, {
-          withCredentials: true,
-        });
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/jobs/${jobid}`,
+          {
+            withCredentials: true,
+          },
+        );
         if (res?.data?.success) {
-          dispatch(setSinglejob(res.data.newjob));
+          dispatch(setSinglejob(res.data.job));
         }
       } catch (error) {
         console.log(error);
@@ -63,7 +68,9 @@ const Jobdescription = () => {
   useEffect(() => {
     const isintialstate =
       singlejob?.applications?.some(
-        (application) => application.applicant === user?._id
+        (application) =>
+          application.applicant === user?._id ||
+          application.applicant?._id === user?._id,
       ) || false;
     setIsAplied(isintialstate);
   }, [singlejob, user]);

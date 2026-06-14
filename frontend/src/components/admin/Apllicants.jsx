@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Navbar from "../shared/Navbar";
 import ApplicantsTable from "./ApplicantsTable";
 import axios from "axios";
-import { APPLYCATION_API_END_POINT } from "@/utils/Constant";
+
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setallapplicants } from "@/redux/ApllicantSlice";
@@ -14,14 +14,14 @@ const Apllicants = () => {
     const fetchallApllicants = async () => {
       try {
         const res = await axios.get(
-          `${APPLYCATION_API_END_POINT}/${params.id}/applicants`,
+          `${import.meta.env.VITE_API_URL}/application/job/${params.id}`,
           {
             withCredentials: true,
-          }
+          },
         );
         if (res.data.success) {
-          dispatch(setallapplicants(res?.data?.checkjob));
-          console.log(res.data.checkjob);
+          dispatch(setallapplicants(res?.data?.job));
+          console.log(res.data.job);
         }
       } catch (error) {
         console.log(error);

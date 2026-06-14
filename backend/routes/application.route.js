@@ -1,16 +1,61 @@
 import express from "express";
-const router = express.Router();
+
 import {
-  applyjobs,
-  getapplicants,
-  getappliedjobs,
-  updatestatus,
+  applyJobs,
+  getApplicants,
+  getAppliedJobs,
+  updateStatus,
+  withdrawApplication,
 } from "../controller/application.controller.js";
+
 import isAuthenticated from "../middlewares/isAuthenticated.js";
 
-router.route("/apply/:id").get(isAuthenticated, applyjobs);
-router.route("/get").get(isAuthenticated, getappliedjobs);
-router.route("/:id/applicants").get(isAuthenticated, getapplicants);
-router.route("/status/:id/update").post(isAuthenticated, updatestatus);
+const router = express.Router();
+
+
+// ======================================
+// Application Routes
+// ======================================
+
+
+// Apply For Job
+router.post(
+  "/apply/:jobId",
+  isAuthenticated,
+  applyJobs
+);
+
+
+// Get Logged In User Applications
+router.get(
+  "/",
+  isAuthenticated,
+  getAppliedJobs
+);
+
+
+// Get Applicants For Specific Job
+router.get(
+  "/job/:jobId",
+  isAuthenticated,
+  getApplicants
+);
+
+
+// Update Application Status
+router.patch(
+  "/:applicationId/status",
+  isAuthenticated,
+  updateStatus
+);
+
+
+// Withdraw/Cancel Application
+router.delete(
+  "/withdraw/:applicationId",
+  isAuthenticated,
+  withdrawApplication
+);
+
 
 export default router;

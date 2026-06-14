@@ -2,42 +2,48 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
+
 import connectdb from "./utils/db.js";
+
 import userroute from "./routes/user.route.js";
 import companyroute from "./routes/company.route.js";
 import jobroute from "./routes/jobs.route.js";
 import applicantroute from "./routes/application.route.js";
-import path from "path";
+import chatbotroute from "./routes/chatbot.route.js";
+
+dotenv.config();
 
 const app = express();
 
-dotenv.config({});
-//middleware
+// Middlewares
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
+
 app.use(cookieParser());
 
+// CORS
 const corsoptions = {
-  origin: process.env.URL,
+  origin: process.env.URL, // http://localhost:5173
   credentials: true,
 };
+
 app.use(cors(corsoptions));
 
-const PORT = process.env.PORT || 3000;
-const _dirname = path.resolve();
-
+// Routes
 app.use("/api/v1/user", userroute);
-
 app.use("/api/v1/company", companyroute);
-
 app.use("/api/v1/jobs", jobroute);
 app.use("/api/v1/application", applicantroute);
+app.use("/api/v1/chatbot", chatbotroute);
 
-app.use(express.static(path.join(_dirname, "/frontend/dist")));
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve(_dirname, "frontend", "dist", "index.html"));
-});
-app.listen(PORT, () => {
-  connectdb();
-  console.log(`Server Running at  port    ${PORT}`);
+const PORT = process.env.PORT || 8000;
+
+app.listen(PORT, async () => {
+  await connectdb();
+  console.log(`Server Running at Port ${PORT}`);
 });

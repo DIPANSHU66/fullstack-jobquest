@@ -1,5 +1,5 @@
 import { setAllJobs } from "@/redux/jobSlice";
-import { Job_API_END_POINT } from "@/utils/Constant";
+
 import axios from "axios";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,10 +11,10 @@ const useGetAlljobs = () => {
     const fetchAlljobs = async () => {
       try {
         const res = await axios.get(
-          `${Job_API_END_POINT}/get?keyword=${searchedQuery}`,
+          `${import.meta.env.VITE_API_URL}/jobs?keyword=${searchedQuery}`,
           {
             withCredentials: true,
-          }
+          },
         );
         if (res?.data?.success) {
           dispatch(setAllJobs(res.data.jobs));
@@ -24,7 +24,7 @@ const useGetAlljobs = () => {
       }
     };
     fetchAlljobs();
-  }, []);
+  }, [searchedQuery, dispatch]);
 };
 
 export default useGetAlljobs;

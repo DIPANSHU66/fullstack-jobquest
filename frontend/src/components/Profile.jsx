@@ -30,7 +30,7 @@ const Profile = () => {
         <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
           <Avatar className="h-24 w-24 md:h-32 md:w-32 border-4 border-gray-300 rounded-full">
             <AvatarImage
-              src="https://th.bing.com/th/id/OIP.rWzUf3mZZVTBz-tQCbA_UwHaGW?w=218&h=186&c=7&r=0&o=5&dpr=1.5&pid=1.7"
+              src={user?.profile?.profilephoto || "https://th.bing.com/th/id/OIP.rWzUf3mZZVTBz-tQCbA_UwHaGW?w=218&h=186&c=7&r=0&o=5&dpr=1.5&pid=1.7"}
               alt="User profile image"
               className="rounded-full"
             />
@@ -90,6 +90,34 @@ const Profile = () => {
             </a>
           ) : (
             <span>Not Found</span>
+          )}
+        </div>
+
+        {/* Mock Interview History */}
+        <div className="mt-6 border-t pt-4">
+          <h1 className="font-semibold text-lg mb-3 flex items-center gap-2">
+            Interview Prep History 💬
+          </h1>
+          {user?.profile?.interviewHistory?.length ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {user.profile.interviewHistory.map((item, index) => (
+                <div key={index} className="p-3 border rounded-xl flex justify-between items-center bg-gray-50/50">
+                  <div>
+                    <p className="text-sm font-bold text-gray-800 capitalize">{item.role} Track</p>
+                    <p className="text-[10px] text-gray-500">{new Date(item.date).toLocaleDateString()}</p>
+                  </div>
+                  <Badge className={`px-2 py-0.5 text-xs font-bold ${
+                    item.score >= 85 ? "bg-emerald-100 text-emerald-800" :
+                    item.score >= 65 ? "bg-purple-100 text-purple-800" :
+                    "bg-amber-100 text-amber-800"
+                  }`}>
+                    {item.score}%
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-gray-500 italic">No mock interview sessions completed yet. Select 'Mock Interview' in the navbar to start practicing!</p>
           )}
         </div>
       </div>

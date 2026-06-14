@@ -12,7 +12,7 @@ import {
 import { Button } from "../ui/button";
 import axios from "axios";
 import Job from "../Job";
-import { Job_API_END_POINT } from "@/utils/Constant";
+
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
@@ -40,7 +40,7 @@ const PostJob = () => {
 
   const selectcompanyhandler = (value) => {
     const selectedcompany = allcompanies?.find(
-      (company) => company.name.toLowerCase() == value
+      (company) => company.name.toLowerCase() == value,
     );
     console.log(selectedcompany);
     setInput({ ...input, companyid: selectedcompany?._id });
@@ -50,10 +50,14 @@ const PostJob = () => {
     e.preventDefault();
     try {
       setloading(true);
-      const res = await axios.post(`${Job_API_END_POINT}/post`, input, {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      });
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/jobs/post`,
+        input,
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        },
+      );
       if (res?.data?.success) {
         toast.success(res?.data.message);
         navigate("/admin/jobs");
