@@ -1,135 +1,139 @@
-# JobQuest - AI-Powered Full-Stack Job Portal
+# 💼 JobQuest - AI-Powered Full-Stack Job Portal
 
-**JobQuest** is a premium, full-stack MERN (MongoDB, Express.js, React.js, Node.js) job portal designed for candidates and recruiters. It goes beyond traditional job boards by integrating advanced Artificial Intelligence models for **Resume-to-Job Matching**, **Automated Resume Auditing**, and **Interactive Technical Mock Interviews**.
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Google Gemini](https://img.shields.io/badge/Google_Gemini-8E75C2?style=for-the-badge&logo=googlegemini&logoColor=white)](https://deepmind.google/technologies/gemini/)
+
+JobQuest is a premium, full-stack job board for candidates and recruiters. It enhances traditional job matching by integrating Google's Gemini LLMs for AI-driven Resume auditing, vector job matching, and technical mock interviews.
 
 ---
 
-## 🚀 Key Features
+## 🔗 Live Links
+- **Live Application (Vercel)**: [fullstack-jobquest.vercel.app](https://fullstack-jobquest.vercel.app)
 
-### 🌟 Candidate Features
+---
+
+## 🖥️ Application Preview
+
+![JobQuest Dashboard Preview](screenshots/mockup.png)
+
+---
+
+## 🌟 Key Features
+
+### 👨‍💻 Candidate Suite
 1. **AI Resume-to-Job Matcher (`/ai-matching`)**:
-   - Generates high-fidelity vector embeddings (768-dimension) of the candidate's profile and resume.
-   - Queries active job embeddings and ranks them using **Vector Cosine Similarity**.
-   - Integrates **RAG (Retrieval-Augmented Generation)** to construct a detailed markdown analysis explaining the fit alignment and recommending preparation strategies.
+   - Generates high-fidelity vector embeddings (768-dimension) of the candidate's profile/resume.
+   - Computes **Vector Cosine Similarity** against active job post embeddings.
+   - Leverages **RAG (Retrieval-Augmented Generation)** to construct a detailed feedback report outlining fit alignment.
 2. **Automated Resume Auditor (`/resume-review`)**:
-   - Scores profile resumes (0-100) dynamically.
-   - Highlights core strengths, identifies technology skills gaps compared to current industry benchmarks, and prints suggestions for enhancement.
+   - Analyzes uploaded resumes and provides a dynamic rating score (0-100).
+   - Identifies skills gaps compared to current industry benchmarks and outputs action steps.
 3. **Interactive Mock Interview Simulator (`/interview-prep`)**:
-   - Tracks: *Frontend, Backend, Fullstack, or AI Engineering*.
-   - A simulated CLI terminal delivers technical questions one-by-one.
-   - Submissions receive instant grading (1-10), constructive evaluation advice, and ideal model answers.
-   - Persists score history in the database, displayed in the Candidate Profile.
-4. **AI Career Chatbot Widget**:
-   - A floating career bot powered by Gemini answering career advice, CV writing, and interview practice questions.
+   - Supported Tracks: *Frontend, Backend, Fullstack, or AI Engineering*.
+   - A realistic CLI terminal poses industry-relevant technical questions one-by-one.
+   - Submissions receive instant grading (1-10), qualitative reviews, and correct model answers.
+4. **AI Career Chatbot**:
+   - A floating career advisor widget powered by Gemini to answer resume-writing, career-path, and interview questions.
 
-### 💼 Recruiter Features
-1. **Company Profiles**: Register companies and manage branding elements (branding description, location, logo, and website).
-2. **Job Board Postings**: Create, edit, and filter active job requirements (salaries, locations, positions, experience levels, and requirements).
-3. **Applicant Auditing**: Audit candidate resumes, view details, and change application states (*Pending, Accepted, Rejected*).
+### 💼 Recruiter Suite
+1. **Company Profiles**: Register organizations and manage logo, branding, description, and headquarters location.
+2. **Job Post Manager**: Create, publish, filter, and delete job openings with specific salary ranges, positions, experience levels, and requirements.
+3. **Applicant Auditing**: Review applicant profiles/resumes, download CVs, and transition application states (*Pending, Accepted, Rejected*).
+
+---
+
+## ⚙️ Robust Dual-Mode Engine
+
+To guarantee 100% platform uptime and prevent failures under API quota limits:
+- **AI Mode (Gemini)**: Utilizes the Google AI SDK (`gemini-2.0-flash` & `text-embedding-004`) to compute vector embeddings and perform code evaluations.
+- **Smart Local Fallback**: If Gemini is rate-limited (`429 Quota Exceeded`) or credentials are absent, the system seamlessly triggers local keyword-based parsers, Jaccard-similarity matching, and statistical text metrics to keep scoring, search, and interview engines operational without interface crashes.
 
 ---
 
 ## 🛠️ Technology Stack
 
-| Component | Technologies Used |
+| Layer | Technologies |
 | :--- | :--- |
-| **Frontend** | React (Vite), TailwindCSS, Redux Toolkit, Redux Persist, Framer Motion, Lucide Icons, Axios |
-| **Backend** | Node.js, Express.js, MongoDB (Mongoose), JWT (Secure HttpOnly Cookies), Multer, Cloudinary |
-| **AI Layer** | Google Gemini API (`gemini-2.0-flash` & `text-embedding-004`), Vector Cosine Similarity Search |
+| **Frontend** | React.js (Vite), Tailwind CSS, Redux Toolkit, Redux Persist, Framer Motion, Axios |
+| **Backend** | Node.js, Express.js, MongoDB + Mongoose ORM, JSON Web Tokens (JWT), cookie-parser |
+| **AI / NLP** | Google Gemini API SDK, Vector Cosine Similarity Search |
+| **Storage / Assets** | Cloudinary API, Multer (multipart parser) |
 
 ---
 
-## ⚙️ Robust Dual-Mode Architecture
-
-To guarantee 100% platform uptime and prevent failures under API limits or missing keys, the portal runs a **Dual-Mode Engine**:
-* **AI Mode (Gemini)**: Uses active Google AI SDK models to parse documents, compute vector embeddings, and generate generative grading.
-* **Smart Local Fallback**: If a Gemini API call is rate-limited (`429 Quota Exceeded`) or the key is absent, the backend invokes local keyword-based parsers, Jaccard-similarity matching, and text analysis to keep the Mock Interview grading, Chatbot, Resume Auditor, and Match Engine fully operational without UI crashes.
-
----
-
-## 📁 Folder Structure
+## 📁 Project Structure
 
 ```text
-Job Portal/
-├── backend/
-│   ├── controller/      # API Controllers (user, company, job, application, chatbot)
-│   ├── Models/          # Mongoose Schemas (User, Job, Company, Application)
-│   ├── routes/          # Express API Routers
-│   ├── utils/           # AI helper, database, Cloudinary & Multer configs
-│   ├── index.js         # Express App entry point
-│   └── .env             # Server configurations
-└── frontend/
-    ├── src/
-    │   ├── components/  # Page components (AIMatching, ResumeReview, InterviewPrep, etc.)
-    │   ├── hooks/       # Axios API integration hooks
-    │   ├── redux/       # Store slices (auth, job, company, application)
-    │   ├── App.jsx      # React router registration
-    │   └── main.jsx     # App mounting
-    └── .env             # Client environment variables
+fullstack-jobquest/
+├── frontend/             # React (Vite) Frontend client
+│   └── src/              # Pages (AIMatching, ResumeReview, MockInterview), Redux slices, Axios hooks
+└── backend/              # Express API Server
+    ├── controllers/      # Route request handlers
+    ├── models/           # MongoDB Mongoose schemas
+    ├── routes/           # REST endpoints
+    └── utils/            # Gemini client, DB connectivity, and asset upload helper configs
 ```
 
 ---
 
-## 🔧 Environment Configurations
+## 🚀 Local Installation & Setup
 
-### Backend (`backend/.env`)
-```env
-PORT=8000
-MONGODB_URI=your_mongodb_atlas_connection_string
-SECRET_KEY=your_jwt_signing_key
-CLOUD_NAME=your_cloudinary_cloud_name
-API_KEY=your_cloudinary_api_key
-API_SECRET=your_cloudinary_api_secret
-URL=http://localhost:5173
-FRONTEND_URL=http://localhost:5173
-GEMINI_API_KEY=your_gemini_api_key
+### Prerequisites
+- [Node.js](https://nodejs.org/) installed
+- [MongoDB](https://www.mongodb.com/) local instance or Atlas Cloud database
+
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/DIPANSHU66/fullstack-jobquest.git
+cd fullstack-jobquest
 ```
 
-### Frontend (`frontend/.env`)
-```env
-VITE_API_URL=http://localhost:8000/api/v1
-```
+### Step 2: Configure & Start Backend
+1. Navigate to the `backend` folder and install dependencies:
+   ```bash
+   cd backend
+   npm install
+   ```
+2. Create a `.env` file in the `backend/` directory:
+   ```env
+   PORT=8000
+   MONGODB_URI=your_mongodb_atlas_connection_string
+   SECRET_KEY=your_jwt_signing_key
+   CLOUD_NAME=your_cloudinary_cloud_name
+   API_KEY=your_cloudinary_api_key
+   API_SECRET=your_cloudinary_api_secret
+   URL=http://localhost:5173
+   FRONTEND_URL=http://localhost:5173
+   GEMINI_API_KEY=your_gemini_api_key
+   ```
+3. Start the backend development server:
+   ```bash
+   npm run dev
+   ```
+
+### Step 3: Configure & Start Frontend
+1. Navigate to the `frontend` folder and install dependencies:
+   ```bash
+   cd ../frontend
+   npm install
+   ```
+2. Create a `.env` file in the `frontend/` directory:
+   ```env
+   VITE_API_URL=http://localhost:8000/api/v1
+   ```
+3. Start the frontend Vite development server:
+   ```bash
+   npm run dev
+   ```
 
 ---
 
-## 🛫 Setup & Installation
-
-### 1. Clone & Install Backend
-```bash
-cd backend
-npm install
-```
-
-### 2. Configure & Start Backend
-Create the `.env` file in the `backend` folder as shown above.
-```bash
-npm run dev
-```
-*Console output should verify:*
-`Server Running at Port 8000` & `MONGOOSE CONNECTED SUCCESFULLY`
-
-### 3. Install & Start Frontend
-```bash
-cd ../frontend
-npm install
-npm run dev
-```
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+## 🛡️ License & Contributions
+This project is open-source. Contributions, issues, and feature requests are welcome!
 
 ---
 
-## 🎯 Mock Interview Reference Guide
-
-To prepare for mock sessions or review graded questions, the integrated database includes these core tracks:
-
-### 🌐 Frontend Track Q&As
-* **Q1: Virtual DOM reconciliation**
-  * *Focus*: React keeps an in-memory representation of UI tree nodes, executes diffing algorithms on state modifications, and updates only dirty nodes in the real DOM.
-* **Q2: Rendering methods (CSR vs SSR vs SSG)**
-  * *Focus*: Client-Side Rendering builds pages inside the browser; Server-Side Rendering compiles HTML on each server request; Static Site Generation pre-builds static files at compile time.
-
-### 💾 Backend Track Q&As
-* **Q1: Middleware chaining**
-  * *Focus*: Middleware functions execute sequentially, have access to request and response objects, and trigger `next()` to pass execution along or terminate responses.
-* **Q2: API Protection mechanisms**
-  * *Focus*: Securing routes via verification layers (JWT verification), CORS origin matching, request limiters (throttling requests), and payload sanitization (escaping SQL/NoSQL queries).
+*Made with ❤️ by [Dipanshu Bansal](https://github.com/DIPANSHU66)*
